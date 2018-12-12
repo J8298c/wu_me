@@ -1,9 +1,9 @@
 package main
 
 import (
-	"log"
+	"fmt"
+	"io/ioutil"
 	"net/http"
-	"time"
 )
 
 // YourWuName : {json: with your given WuName}
@@ -14,22 +14,12 @@ type YourWuName struct {
 func main() {
 	url := "https://wunameaas.herokuapp.com/enterthewu/"
 
-	spaceClient := http.Client{
-		//max is 2 seconds
-		Timeout: time.Second * 2,
-	}
+	resp, _ := http.Get(url + "julio")
 
-	req, err := http.NewRequest(http.MethodGet, url+"julio", nil)
-	if err != nil {
-		panic(err)
-	}
+	bytes, _ := ioutil.ReadAll(resp.Body)
 
-	req.Header.Set("User-Agent", "spacecount-tutorial")
+	fmt.Println("HTML:\n\n", string(bytes))
 
-	res, getErr := spaceClient.Do(req)
-
-	if getErr != nil {
-		log.Fatal(getErr)
-	}
+	resp.Body.Close()
 
 }
