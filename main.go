@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+
+	"golang.org/x/net/html"
 )
 
 // YourWuName : {json: with your given WuName}
@@ -22,4 +24,22 @@ func main() {
 
 	resp.Body.Close()
 
+	z := html.NewTokenizer(resp.Body)
+
+	for {
+		tt := z.Next()
+
+		switch {
+		case tt == html.ErrorToken:
+			return
+		case tt == html.StartTagToken:
+			t := z.Token()
+
+			isPara := t.Data == "p"
+
+			if isPara {
+				fmt.Println("FOund a p tag")
+			}
+		}
+	}
 }
